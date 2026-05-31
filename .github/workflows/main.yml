@@ -5,16 +5,10 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
     - name: 拉取源码
       uses: actions/checkout@v4
-
-    # 手动安装 .NET Framework 4.6.1 开发者包
-    - name: Install .NET Framework 4.6.1 Targeting Pack
-      run: |
-        Invoke-WebRequest -Uri "https://download.microsoft.com/download/E/1/9/E1987F5C-649F-4364-A708-656058618404/NDP461-DevPack-KB3105179-ENU.exe" -OutFile "NDP461-DevPack.exe"
-        Start-Process -FilePath "NDP461-DevPack.exe" -ArgumentList "/quiet /norestart" -Wait
 
     - name: 安装MSBuild
       uses: microsoft/setup-msbuild@v2

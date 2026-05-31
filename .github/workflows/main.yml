@@ -1,25 +1,32 @@
 name: Build BetterJoy_CHS
 on:
-   push:
-     branches: [ master ]
+  push:
+    branches: [ master ]
+
 jobs:
-   build:
-     runs-on: windows-latest
-     steps:
-     - name: 拉取源码
-       uses: actions/checkout@v4
-     - name: 安装 .NET Framework 4.6.1 目标包
-       uses: actions/setup-dotnet@v4
-       with:
-         dotnet-version: '4.6.1'
-     - name: 安装MSBuild
-       uses: microsoft/setup-msbuild@v2
-     - name: 还原NuGet依赖
-       run: nuget restore BetterJoy.sln
-     - name: 编译Release版本
-       run: msbuild BetterJoy.sln /p:Configuration=Release /p:Platform=x64
-     - name: 上传编译结果
-       uses: actions/upload-artifact@v4
-       with:
-         name: BetterJoy-Release
-         path: BetterJoyForCemu/bin/x64/Release/
+  build:
+    runs-on: windows-2022
+    steps:
+    - name: 拉取源码
+      uses: actions/checkout@v4
+
+    # 手动安装 .NET Framework 4.6.1 开发者包
+    - name: Install .NET Framework 4.6.1 Targeting Pack
+      run: |
+        Invoke-WebRequest -Uri "https://download.microsoft.com/download/E/1/9/E1987F5C-649F-4364-A708-656058618404/NDP461-DevPack-KB3105179-ENU.exe" -OutFile "NDP461-DevPack.exe"
+        Start-Process -FilePath "NDP461-DevPack.exe" -ArgumentList "/quiet /norestart" -Wait
+
+    - name: 安装MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: 还原NuGet依赖
+      run: nuget restore BetterJoy.sln
+
+    - name: 编译Release版本
+      run: msbuild BetterJoy.sln /p:Configuration=Release /p:Platform=x64
+
+    - name: 上传编译结果
+      uses: actions/upload-artifact@v4
+      with:
+        name: BetterJoy-Release
+        path: BetterJoyForCemu/bin/x64/Release/

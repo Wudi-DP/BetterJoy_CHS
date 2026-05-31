@@ -4,10 +4,14 @@ on:
      branches: [ master ]
 jobs:
    build:
-     runs-on: windows-2019
+     runs-on: windows-latest
      steps:
      - name: 拉取源码
        uses: actions/checkout@v4
+     - name: 安装 .NET Framework 4.6.1 目标包
+       uses: actions/setup-dotnet@v4
+       with:
+         dotnet-version: '4.6.1'
      - name: 安装MSBuild
        uses: microsoft/setup-msbuild@v2
      - name: 还原NuGet依赖

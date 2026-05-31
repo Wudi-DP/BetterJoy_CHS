@@ -1,0 +1,21 @@
+name: Build BetterJoy_CHS
+on:
+   push:
+     branches: [ master ]
+jobs:
+   build:
+     runs-on: windows-latest
+     steps:
+     - name: 拉取源码
+       uses: actions/checkout@v4
+     - name: 安装MSBuild
+       uses: microsoft/setup-msbuild@v2
+     - name: 还原NuGet依赖
+       run: nuget restore BetterJoy.sln
+     - name: 编译Release版本
+       run: msbuild BetterJoy.sln /p:Configuration=Release /p:Platform=x64
+     - name: 上传编译结果
+       uses: actions/upload-artifact@v4
+       with:
+         name: BetterJoy-Release
+         path: BetterJoyForCemu/bin/x64/Release/
